@@ -1,0 +1,114 @@
+<!-- 用于列表页 -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>{{.pageTitle}}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!-- 全局CSS加载 Start -->
+    {{template "shared/newglobalcss.html"}}
+    <!-- 全局CSS加载 End -->
+
+    <!-- 具体页面头部文件 Start -->
+    {{.headcssjs}}
+    <!-- 具体页面头部文件 End -->
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-full">
+    <div class="wrapper">
+
+        <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="/static/assets/img/sidebar-1.jpg">
+            <div class="logo">
+                <a href="{{urlfor "HomeController.Index" }}" class="simple-text">
+                    Hx Admin
+                </a>
+            </div>
+            <div class="logo logo-mini">
+                <a href="{{urlfor "HomeCenterController.Index" }}" class="simple-text">
+                    Hx
+                </a>
+            </div>
+
+            <div class="sidebar-wrapper">
+                <div class="user" style="z-index:999 ">
+                    <div class="photo">
+                        <img src="{{.backenduser.Avatar}}" />
+                    </div>
+                    <div class="info">
+                        <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                            {{.backenduser.RealName}}
+                            <b class="caret"></b>
+                        </a>
+                        <div class="collapse" id="collapseExample">
+                            <ul class="nav">
+                                <li>
+                                    <a href="{{urlfor "UserCenterController.Profile" }}" class="btn btn-default btn-flat">个人信息</a>
+                                </li>
+                                <li>
+                                    <a href="{{urlfor "HomeController.Logout" }}" class="btn btn-default btn-flat"> 退  出</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- pagesidebar-->
+
+                <!-- 左侧全局菜单 Start -->
+                {{template "shared/sidebar.html" }}
+                <!-- 左侧全局菜单 End -->
+            </div>
+        </div>
+        <!-- 左边菜单栏 End-->
+        <!-- /.sidebar -->
+        <div class="main-panel">
+
+            <!-- 全局顶部菜单 Start -->
+            {{template "shared/globaltopbar.html"}}
+            <!-- 全局顶部菜单 End -->
+
+            <!-- 主体内容 Start -->
+            {{.LayoutContent}}
+            <!-- 主体内容 End -->
+
+            <!-- 全局底部 Start -->
+            {{template "shared/globalfooter.html"}}
+            <!-- 全局底部 End -->
+
+            <!-- 右侧主体切换 Start -->
+            {{template "shared/globaltheme.html"}}
+            <!-- 右侧主体切换 End -->
+
+        </div>
+    </div>
+
+
+    <!-- 全局JS加载 Start -->
+    {{template "shared/globaljs.html"}}
+    <!-- 全局JS加载 End -->
+
+    <script>
+        $(function () {
+            //页面左侧菜单初始化
+            rms.pageSidebarInit({
+                slideBarBox: '#pageSidebar', //菜单容器
+                url: '{{urlfor "ResourceController.UserMenuTree"}}', //菜单数据地址
+                cur: '{{.activeSidebarUrl}}' //当前激活的菜单地址
+            });
+        });
+    </script>
+
+    <!-- 具体页面JS加载 Start -->
+    {{.footerjs}}
+    <!-- 具体页面JS加载 End -->
+
+
+</body>
+
+
+</html>
