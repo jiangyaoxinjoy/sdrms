@@ -9,6 +9,12 @@ type JsonResult struct {
 	Obj  interface{}          `json:"obj"`
 }
 
+type JsonResultEditormd struct {
+	Success enums.JsonResultCode `json:"success"`
+	Message string               `json:"message"`
+	Url     string               `json:"url"`
+}
+
 // BaseQueryParam 用于查询的类
 type BaseQueryParam struct {
 	Sort   string `json:"sort"`

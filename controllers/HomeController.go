@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"strings"
+
 	"sdrms/enums"
 	"sdrms/models"
 	"sdrms/utils"
-	"strings"
 )
 
 type HomeController struct {
@@ -15,10 +16,6 @@ func (c *HomeController) Index() {
 	//判断是否登录
 	c.checkLogin()
 	// c.GetSession()
-	//activeSidebarUrl当前激活菜单url {{.activeSidebarUrl}}
-	//c.URLFor如果没有在后台经过URLFor转换，前端直接输出应该这样写 {{ urlfor "c.controllerName + "." + c.actionName"}}
-	//通过controller和action可以输出对应的url
-	c.Data["activeSidebarUrl"] = c.URLFor(c.controllerName + "." + c.actionName)
 	c.setTpl()
 }
 func (c *HomeController) Page404() {

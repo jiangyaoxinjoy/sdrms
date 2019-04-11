@@ -17,7 +17,7 @@ func (a *Resource) TableName() string {
 type Resource struct {
 	Id              int
 	Name            string    `orm:"size(64)"`
-	Parent          *Resource `orm:"null;rel(fk)"` // RelForeignKey relation //一对多关系 数据库表默认为 NOT NULL，设置 null 代表 ALLOW NULL
+	Parent          *Resource `orm:"null;rel(fk)"` // RelForeignKey relation
 	Rtype           int
 	Seq             int
 	Sons            []*Resource        `orm:"reverse(many)"` // fk 的反向关系
@@ -27,7 +27,7 @@ type Resource struct {
 	UrlFor          string             `orm:"size(256)" Json:"-"`
 	HtmlDisabled    int                `orm:"-"`             //在html里应用时是否可用
 	Level           int                `orm:"-"`             //第几级，从0开始
-	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)"` // 反向一对多关联
+	RoleResourceRel []*RoleResourceRel `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
 // ResourceOne 获取单条
@@ -94,7 +94,6 @@ func ResourceTreeGridByUserId(backuserid, maxrtype int) []*Resource {
 	var sql string
 	if user.IsSuper == true {
 		//如果是管理员，则查出所有的
-		//Raw 函数，返回一个 RawSeter 用以对设置的 sql 语句和参数进行操作rtype <=maxrtype
 		sql = fmt.Sprintf(`SELECT id,name,parent_id,rtype,icon,seq,url_for FROM %s Where rtype <= ? Order By seq asc,Id asc`, ResourceTBName())
 		o.Raw(sql, maxrtype).QueryRows(&list)
 	} else {
@@ -116,6 +115,7 @@ func resourceList2TreeGrid(list []*Resource) []*Resource {
 	result := make([]*Resource, 0)
 	for _, item := range list {
 		if item.Parent == nil || item.Parent.Id == 0 {
+
 			item.Level = 0
 			result = append(result, item)
 			result = resourceAddSons(item, list, result)

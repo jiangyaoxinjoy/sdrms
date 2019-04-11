@@ -1,0 +1,74 @@
+<section class="content container-fluid">
+  <div class="col-md-12">
+  	<div class="card">
+  		<form id="formid" class="form-horizontal">
+        <div class="title">
+          <div class="form-group label-floating is-empty">
+            <input type="text"  placeholder="标题" class="form-control" required name="Title" value="{{.course.Title}}">
+            <span class="material-input"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+						<div class="form-group label-floating is-empty">
+							<div id="layout" class="editor">
+                <div id="content">
+                    <textarea>{{.course.CourseContent.Content}}</textarea>
+                </div>
+              </div>           
+					  </div>
+          </div>
+				</div>  
+        <div class="row">
+					<label class="col-sm-2 label-on-left">关键字</label>  
+          <div class="col-sm-10">
+            <div class="form-group label-floating is-empty">
+						{{range .allTags}}
+              <div class="checkbox">
+              	<label>
+              		<input value="{{.Id}}" type="checkbox" name="checkTags">
+              		{{.Name}}
+              	</label>
+              </div>
+            {{end}}
+            </div>  
+          </div>
+				</div> 
+        <div class="row">
+          <label class="col-sm-2 label-on-left">课程类型</label> 
+          <div class="col-sm-2">
+            <select name="CourseCatetory" class="selectpicker" data-style="btn btn-primary btn-round" >
+              {{range .category}}
+              <option value="{{.Id}}">{{.Name}}</option>
+              {{end}}
+            </select>
+          </div>	
+        </div> 
+        <div class="row">
+          <label class="col-sm-2 label-on-left">状态</label>  
+           <div class="col-sm-10">
+						<div class="form-group label-floating is-empty">
+							<div class="radio">
+  							<label>
+  							<input type="radio" name="Status" value="1"><span class="circle"></span><span class="check"></span>
+  								正常
+  							</label>
+                <label>
+  								<input type="radio" name="Status" value="0"><span class="circle"></span><span class="check"></span>
+  								草稿
+  							</label>
+     
+  						</div>  
+					  </div>
+          </div>           
+        </div> 
+        <div class="row col-md-2 col-md-offset-2">
+          <button type="button" class="btn btn-fill btn-rose" onclick="checkform(event)">保存</button>         
+        </div> 
+        <button type="button" class="btn btn-fill btn-primary" onClick="goback()">放弃</button>                		
+        <input type="text" class="form-control hidden" name="Id" value="{{.course.Id}}"/>
+        <input type="text" class="form-control hidden" name="Tags" value=""/>
+  		</form>
+  	</div>
+</div>
+</section>

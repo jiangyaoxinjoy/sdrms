@@ -11,7 +11,6 @@ import (
 	"github.com/astaxie/beego"
 )
 
-// beego.Controller有很多初始化方法，init(ct *context.Context, childName string, app interface{})，Prepare，get，post...
 type BaseController struct {
 	beego.Controller
 	controllerName string             //当前控制名称
@@ -19,7 +18,6 @@ type BaseController struct {
 	curUser        models.BackendUser //当前用户信息
 }
 
-//用户检验,这个函数会在下面定义的这些 Method 方法之前执行
 func (c *BaseController) Prepare() {
 	//附值
 	c.controllerName, c.actionName = c.GetControllerAndAction()
@@ -121,6 +119,8 @@ func (c *BaseController) setBackendUser2Session(userId int) error {
 	//获取这个用户能获取到的所有资源列表
 	resourceList := models.ResourceTreeGridByUserId(userId, 1000)
 	for _, item := range resourceList {
+		fmt.Println("*********************-------------")
+		fmt.Println(item)
 		m.ResourceUrlForList = append(m.ResourceUrlForList, strings.TrimSpace(item.UrlFor))
 	}
 	c.SetSession("backenduser", *m)
@@ -140,24 +140,26 @@ func (c *BaseController) setTpl(template ...string) {
 		layout = template[1]
 	default:
 		//不要Controller这个10个字母
-		//controllerName在Prepare方法中设置
-		// 当你设置了自动渲染，然后在你的 Controller 中没有设置任何的 TplName，那么 beego 会自动设置你的模板文件如下
-		// 也就是你对应的 Controller 名字+请求方法名.模板后缀
 		ctrlName := strings.ToLower(c.controllerName[0 : len(c.controllerName)-10])
 		actionName := strings.ToLower(c.actionName)
 		tplName = ctrlName + "/" + actionName + ".html"
 	}
-
-	// beego 就会首先解析 TplName 指定的文件，获取内容赋值给 LayoutContent，然后最后渲染 layout.html 文件
-	// Layout 页中设置多个 section，然后每个 section 可以分别包含各自的子模板页
-	c.Layout = layout   //固定的界面 在 layout.html 中你必须设置如下的变量：{{.LayoutContent}}
-	c.TplName = tplName //设置显示的模板文件,默认支持 tpl 和 html 的后缀名,beego 会自动的在 viewpath 目录下查询该文件并渲染
+	c.Layout = layout
+	c.TplName = tplName
 
 	fmt.Println(c.TplName)
 }
 
 func (this *BaseController) jsonResult(code enums.JsonResultCode, msg string, obj interface{}) {
 	res := &models.JsonResult{Code: code, Msg: msg, Obj: obj}
+	this.Data["json"] = res
+	this.ServeJSON()
+	this.StopRun()
+}
+
+func (this *BaseController) jsonResultEditormd(success enums.JsonResultCode, message, url string) {
+	res := &models.JsonResultEditormd{Success: success, Message: message, Url: url}
+	fmt.Println(res)
 	this.Data["json"] = res
 	this.ServeJSON()
 	this.StopRun()

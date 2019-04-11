@@ -20,7 +20,7 @@
                 rules: {},
                 messages: {},
                 errorPlacement: function (error, element) { // render error placement for each input type
-                    console.log(element.parent())
+//                    //console.log(element.parent())
                     
                     if (element.parent(".input-group").size() > 0) {
                         error.insertAfter(element.parent(".input-group"));
@@ -51,6 +51,7 @@
                 },
                 success: function (label) {
                     label.closest('.form-group').removeClass('has-error').addClass("has-success");
+         
                 },
                 submitHandler: null
             };

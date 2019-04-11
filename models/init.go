@@ -7,8 +7,7 @@ import (
 
 // init 初始化
 func init() {
-	// 需要在init中注册定义的model Struct
-	orm.RegisterModel(new(BackendUser), new(Resource), new(Role), new(RoleResourceRel), new(RoleBackendUserRel))
+	orm.RegisterModel(new(BackendUser), new(Tag), new(Resource), new(Role), new(RoleResourceRel), new(RoleBackendUserRel), new(Course), new(CourseCategory), new(CourseContent))
 }
 
 // TableName 下面是统一的表名管理
@@ -41,3 +40,24 @@ func RoleResourceRelTBName() string {
 func RoleBackendUserRelTBName() string {
 	return TableName("role_backenduser_rel")
 }
+
+//获取对应课程表
+func CourseCategoryTBName() string {
+	return TableName("course_category")
+}
+
+func CourseTBName() string {
+	return TableName("course")
+}
+
+func CourseContentTBName() string {
+	return TableName("course_content")
+}
+
+func TagTBName() string {
+	return TableName("tag")
+}
+
+// func CourseTagTBName() string {
+// 	return TableName("course_tag_rel")
+// }

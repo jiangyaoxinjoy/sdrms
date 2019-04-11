@@ -8,7 +8,19 @@ import (
 
 func init() {
 	//课程路由
-	beego.Router("course/index/:tag", &controllers.CourseController{}, "*:Index")
+	beego.Router("/course/index/", &controllers.CourseController{}, "*:Index")
+	beego.Router("/course/datagrid", &controllers.CourseController{}, "Post:DataGrid")
+	beego.Router("/course/tagsdatagrid", &controllers.CourseController{}, "Post:TagsDataGrid")
+	beego.Router("/course/categorydatagrid", &controllers.CourseController{}, "Post:CategoryDataGrid")
+	beego.Router("/course/delete", &controllers.CourseController{}, "Post:Delete")
+	beego.Router("/course/edit/?:id", &controllers.CourseController{}, "Get,Post:Edit")
+	beego.Router("/course/editormdPic", &controllers.CourseController{}, "Post:EditormdPic")
+	beego.Router("/course/tags", &controllers.CourseController{}, "Get:Tags")
+	beego.Router("/course/deletetag", &controllers.CourseController{}, "Post:DeleteTag")
+	beego.Router("/course/edittag", &controllers.CourseController{}, "Post,Get:EidtTag")
+	beego.Router("/course/category", &controllers.CourseController{}, "Get:Category")
+	beego.Router("/course/editcategory", &controllers.CourseController{}, "Post,Get:EidtCategory")
+	beego.Router("/course/deletecategory", &controllers.CourseController{}, "Post:DeleteCategory")
 
 	//用户角色路由
 	beego.Router("/role/index", &controllers.RoleController{}, "*:Index")

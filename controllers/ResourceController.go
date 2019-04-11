@@ -8,7 +8,6 @@ import (
 	"sdrms/enums"
 	"sdrms/models"
 
-	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -48,11 +47,9 @@ func (c *ResourceController) TreeGrid() {
 }
 
 //UserMenuTree 获取用户有权管理的菜单、区域列表
-//在rms.js中发送请求，获取菜单数据
 func (c *ResourceController) UserMenuTree() {
 	userid := c.curUser.Id
 	//获取用户有权管理的菜单列表（包括区域）
-	//1修改为2就会显示3级菜单
 	tree := models.ResourceTreeGridByUserId(userid, 1)
 	//转换UrlFor 2 LinkUrl
 	c.UrlFor2Link(tree)
@@ -70,7 +67,6 @@ func (c *ResourceController) ParentTreeGrid() {
 
 // UrlFor2LinkOne 使用URLFor方法，将资源表里的UrlFor值转成LinkUrl
 func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
-	logs.Info(c.UrlFor2LinkOne(item.UrlFor))
 	if len(urlfor) == 0 {
 		return ""
 	}
@@ -92,7 +88,6 @@ func (c *ResourceController) UrlFor2LinkOne(urlfor string) string {
 func (c *ResourceController) UrlFor2Link(src []*models.Resource) {
 	for _, item := range src {
 		item.LinkUrl = c.UrlFor2LinkOne(item.UrlFor)
-
 	}
 }
 
@@ -229,7 +224,6 @@ func (c *ResourceController) CheckUrlFor() {
 	}
 }
 func (c *ResourceController) UpdateSeq() {
-
 	Id, _ := c.GetInt("pk", 0)
 	oM, err := models.ResourceOne(Id)
 	if err != nil || oM == nil {

@@ -1,0 +1,96 @@
+<script src="/static/plugins/editor/editormd.min.js"></script>
+<script>
+console.log({{.course}})
+console.log({{.category}})
+console.log({{.allTags}})
+
+var testEditor;
+testEditor = editormd("content", {
+     placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
+     width: "100%",
+     height: 640,
+     syncScrolling: "single",  
+     path: "/static/plugins/editor/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
+     theme: "dark",//工具栏主题
+     previewTheme: "dark",//预览主题
+     editorTheme: "pastel-on-dark",//编辑主题
+     saveHTMLToTextarea: true,
+    
+     /**上传图片相关配置如下*/
+     imageUpload : true,
+     imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+     imageUploadURL : {{urlfor "CourseController.EditormdPic"}},//注意你后端的上传图片服务地址
+    
+     emoji: true,
+     taskList: true, 
+     tocm: true,         // Using [TOCM]
+     tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+     flowChart: true,             // 开启流程图支持，默认关闭
+     sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+     toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
+         return editormd.toolbarModes['full']; // full, simple, mini
+      },
+});
+//上面的挑有用的写上去就行
+
+$("#oriContent").val({{.course.CourseContent.Content}} || "请输入内容")
+var options = $("option")
+for(let i=0;i<options.length;i++) {
+  if(options.eq(i).val() == {{.course.CourseCategory.Id}}) {
+    options.eq(i).attr("selected","selected")
+  }
+}
+
+var allTags = $("input[name='checkTags']")
+var checkTags = {{.course.Tags}} || "";
+var checkTagsArr = [];
+for(let i=0;i<checkTags.length;i++) {
+  checkTagsArr.push(checkTags[i].Id)
+  for(let j=0;j<allTags.length;j++) {
+    if(allTags.eq(j).val() == checkTags[i].Id) {
+      allTags.eq(j).attr("checked","checked")
+      break;
+    }
+  }
+}
+var checkTagsString = checkTagsArr.join(",");
+$("input[name='Tags']").val(checkTagsString)
+
+var statusRadio = $("input[type='radio']")
+var checkradio = {{.course.Status}} || 0
+for(let i=0;i<statusRadio.length;i++) {
+  if(statusRadio.eq(i).val() == checkradio) {
+    statusRadio.eq(i).attr("checked",true)
+  }
+}
+
+$('input:checkbox').change(function () { 
+  var tags = $("input[name='checkTags']:checked").map(function(){return this.value}).get().join(",")
+  $("input[name='Tags']").val(tags)
+}); 
+
+function checkform(event) {
+  event.preventDefault();
+  var $thisForm = $("#formid");
+  var url = '{{urlfor "CourseController.Edit"}}';
+  var data = $thisForm.serialize()  
+  console.log(data) 
+  $.sdpost( url, data, function(res) {
+    console.log(res)
+    if(res.code == 0) {
+      layer.msg(res.msg,{
+        icon:1,
+        time:1000,  
+      },function(){
+         window.history.back()
+      });
+      
+    }else {
+      layer.alert(res.obj,{title:res.msg})
+    }    
+  })
+}
+function goback() {
+  window.history.back();
+}
+</script>

@@ -7,6 +7,8 @@ import (
 	"github.com/astaxie/beego/orm"
 
 	//_ "github.com/mattn/go-sqlite3"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -32,7 +34,11 @@ func InitDatabase() {
 		orm.RegisterDataBase(dbAlias, dbType, dbName)
 	case "mysql":
 		dbCharset := beego.AppConfig.String(dbType + "::db_charset")
-		//注册一个别名为 default 的数据库，作为默认使用 dbAlias别名
+		// 参数1        数据库的别名，用来在 ORM 中切换数据库使用
+		// 参数2        driverName
+		// 参数3        对应的链接字符串
+		// 参数4(可选)  设置最大空闲连接
+		// 参数5(可选)  设置最大数据库连接 (go >= 1.2)
 		orm.RegisterDataBase(dbAlias, dbType, dbUser+":"+dbPwd+"@tcp("+dbHost+":"+
 			dbPort+")/"+dbName+"?charset="+dbCharset, 30)
 	}
@@ -40,6 +46,8 @@ func InitDatabase() {
 	isDev := (beego.AppConfig.String("runmode") == "dev")
 	//自动建表
 	orm.RunSyncdb("default", false, isDev)
+	// 设置为 UTC 时间
+	orm.DefaultTimeLoc = time.UTC
 	if isDev {
 		orm.Debug = isDev
 	}

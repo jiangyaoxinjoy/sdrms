@@ -1,6 +1,8 @@
 package models
 
 import (
+	_ "fmt"
+
 	"github.com/astaxie/beego/orm"
 )
 
@@ -23,7 +25,7 @@ type BackendUser struct {
 	Id                 int
 	RealName           string `orm:"size(32)"`
 	UserName           string `orm:"size(24)"`
-	UserPwd            string `json:"-"` //设置 - 即可忽略 struct 中的字段
+	UserPwd            string `json:"-"`
 	IsSuper            bool
 	Status             int
 	Mobile             string                `orm:"size(16)"`
@@ -32,11 +34,11 @@ type BackendUser struct {
 	RoleIds            []int                 `orm:"-" form:"RoleIds"`
 	RoleBackendUserRel []*RoleBackendUserRel `orm:"reverse(many)"` // 设置一对多的反向关系
 	ResourceUrlForList []string              `orm:"-"`
+	Courses            []*Course             `orm:"reverse(many)"` // 设置一对多的反向关系
 }
 
 // BackendUserPageList 获取分页数据
 func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) {
-	// 传入表名，或者 Model 对象，返回一个 QuerySeter
 	query := orm.NewOrm().QueryTable(BackendUserTBName())
 	data := make([]*BackendUser, 0)
 	//默认排序
@@ -63,8 +65,7 @@ func BackendUserPageList(params *BackendUserQueryParam) ([]*BackendUser, int64) 
 
 // BackendUserOne 根据id获取单条
 func BackendUserOne(id int) (*BackendUser, error) {
-	o := orm.NewOrm() // 创建一个 Ormer
-	// NewOrm 的同时会执行 orm.BootStrap (整个 app 只执行一次)，用以验证模型之间的定义并缓存。
+	o := orm.NewOrm()
 	m := BackendUser{Id: id}
 	err := o.Read(&m)
 	if err != nil {
@@ -76,10 +77,9 @@ func BackendUserOne(id int) (*BackendUser, error) {
 // BackendUserOneByUserName 根据用户名密码获取单条
 func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
 	m := BackendUser{}
-	//BackendUserTBName 获取表名称的方法
-	//QueryTable() 获得一个新的 QuerySeter 对象,以 QuerySeter 来组织查询
-	//One() 尝试返回单条记录
 	err := orm.NewOrm().QueryTable(BackendUserTBName()).Filter("username", username).Filter("userpwd", userpwd).One(&m)
+	// fmt.Println("===========-----***********")
+	// fmt.Println(m)
 	if err != nil {
 		return nil, err
 	}

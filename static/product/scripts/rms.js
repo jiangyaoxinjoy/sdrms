@@ -1,14 +1,12 @@
 var rms = function () {
     //初始化    
     function init() {
-        console.log("*** rms js *** init");
+        //console.log("*** rms js *** init");
     }
     //菜单初化
     function pageSidebarInit(options) {
         var url = options.url;
         $.sdpost(url, {}, function (re) {
-        	console.log(re.obj)
-			console.log(options)
             if (re.code === 0) {                
                 var $pageSidebar = $(options.slideBarBox);
                 if ($pageSidebar.length === 0) {
@@ -28,7 +26,7 @@ var rms = function () {
                         html.push(showSiderBarSon(e, data));
                     } else if (e.Rtype === 0) {
                         //如果是区域，先添加header
-//                        html.push('<li class="header" > ' + e.Name + ' </li>');
+                        // html.push('<li class="header" > ' + e.Name + ' </li>');
                         //添加区域的子节点  
                         $(data).filter(function (i1, e1) {
                             return e1.Parent.Id === e.Id;
@@ -170,5 +168,5 @@ var rms = function () {
 
 }();
 jQuery(document).ready(function () {
-    rms.init()
+   rms.init()
 });
