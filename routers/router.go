@@ -67,4 +67,12 @@ func init() {
 
 	beego.Router("/", &controllers.HomeController{}, "*:Index")
 
+	//api
+	beego.Router("/api/articles", &controllers.ApiController{}, "Post:CourseGrid")
+	beego.Router("/api/page/?:identify", &controllers.ApiController{}, "Get:OneCourse")
+	beego.Router("/api/categorys/?:id", &controllers.ApiController{}, "Get,Post:Categorys")
+	beego.Router("/api/login", &controllers.ApiController{}, "Post:Login")
+	beego.Router("/api/tags", &controllers.ApiController{}, "Get:GetTags")
+	beego.Router("/api/article/?:aid", &controllers.ApiController{}, "Get:OneCourse")
+	beego.Router("/api/comments/", &controllers.ApiController{}, "Get,Post:GetComments")
 }

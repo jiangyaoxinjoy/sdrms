@@ -109,7 +109,7 @@ func (c *CourseController) save() {
 			c.jsonResult(enums.JRCodeFailed, "错误提示", fmt.Sprintf("%s %s", err.Name, err.Message))
 		}
 	}
-
+	ctime := utils.GetCurrTs()
 	if id > 0 {
 		course.Id = id
 		if err := o.Read(course); err != nil {
@@ -131,7 +131,7 @@ func (c *CourseController) save() {
 			o.Rollback()
 			c.jsonResult(enums.JRCodeFailed, "修改失败", fmt.Sprintf("%s", err))
 		}
-
+		course.ModifyTime = ctime
 		if _, err := o.Update(course, "Title", "Status", "CourseCategory", "Tags", "ModifyTime"); err != nil {
 			o.Rollback()
 			c.jsonResult(enums.JRCodeFailed, "修改失败", fmt.Sprintf("%s", err))
@@ -139,6 +139,11 @@ func (c *CourseController) save() {
 		o.Commit()
 		c.jsonResult(enums.JRCodeSucc, "ok", "")
 	} else {
+		course.CreatedTime = ctime
+		course.ModifyTime = ctime
+		num := utils.Generate_Randnum(20, 10)
+		identify := utils.GetRandomString(num)
+		course.Identify = identify
 		course.Title = title
 		course.Status = status
 		backendUser := &models.BackendUser{Id: c.curUser.Id}
@@ -220,6 +225,7 @@ func (c *CourseController) Tags() {
 
 func (c *CourseController) TagsDataGrid() {
 	params := new(models.BaseQueryParam)
+	json.Unmarshal(c.Ctx.Input.RequestBody, &params)
 	pagelist, total := models.TagsPageList(params)
 	result := make(map[string]interface{})
 	result["total"] = total

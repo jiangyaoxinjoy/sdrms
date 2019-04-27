@@ -119,8 +119,6 @@ func (c *BaseController) setBackendUser2Session(userId int) error {
 	//获取这个用户能获取到的所有资源列表
 	resourceList := models.ResourceTreeGridByUserId(userId, 1000)
 	for _, item := range resourceList {
-		fmt.Println("*********************-------------")
-		fmt.Println(item)
 		m.ResourceUrlForList = append(m.ResourceUrlForList, strings.TrimSpace(item.UrlFor))
 	}
 	c.SetSession("backenduser", *m)
@@ -147,7 +145,7 @@ func (c *BaseController) setTpl(template ...string) {
 	c.Layout = layout
 	c.TplName = tplName
 
-	fmt.Println(c.TplName)
+	// fmt.Println(c.TplName)
 }
 
 func (this *BaseController) jsonResult(code enums.JsonResultCode, msg string, obj interface{}) {

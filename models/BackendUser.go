@@ -78,8 +78,6 @@ func BackendUserOne(id int) (*BackendUser, error) {
 func BackendUserOneByUserName(username, userpwd string) (*BackendUser, error) {
 	m := BackendUser{}
 	err := orm.NewOrm().QueryTable(BackendUserTBName()).Filter("username", username).Filter("userpwd", userpwd).One(&m)
-	// fmt.Println("===========-----***********")
-	// fmt.Println(m)
 	if err != nil {
 		return nil, err
 	}

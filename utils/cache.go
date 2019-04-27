@@ -30,7 +30,7 @@ func InitCache() {
 	//conn: Redis 连接信息
 	//dbNum: 连接 Redis 时的 DB 编号. 默认是0.
 	//password: 用于连接有密码的 Redis 服务器.
-	fmt.Println("--------------------")
+	fmt.Println("--------------------cache")
 	fmt.Println(err)
 	fmt.Println(cc)
 	if err != nil {

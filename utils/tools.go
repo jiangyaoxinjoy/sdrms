@@ -18,15 +18,19 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/md5"
-	"crypto/rand"
+
+	// "crypto/rand"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"hash"
 	"math/big"
+	"math/rand"
 	"reflect"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func NumberEncode(number string, alphabet []byte) string {
@@ -57,7 +61,7 @@ func NumberDecode(token string, alphabet []byte) string {
 	return x.String()
 }
 
-// Random generate string
+// Random generate string随机字符串
 func GetRandomString(n int) string {
 	const alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	var bytes = make([]byte, n)
@@ -313,5 +317,51 @@ func (a argAny) Get(i int, args ...interface{}) (r interface{}) {
 	if len(args) > 0 {
 		r = args[0]
 	}
+	return
+}
+
+//0-n的随机数
+func Generate_Randnum(max, min int) int {
+	rand.Seed(time.Now().Unix())
+	rnd := rand.Intn(max-min) + min
+	return rnd
+}
+
+func GetCurrTs() string {
+	var cstSh, _ = time.LoadLocation("Asia/Shanghai")
+	// return time.Now().In(cstSh).Unix()
+	return time.Now().In(cstSh).Format("2006-01-02 15:04:05")
+}
+
+//将结构体里的成员按照json名字来赋值
+func SetStructFieldByJsonName(ptr interface{}, fields map[string]interface{}) {
+	// LogDebug("fields:" + fields)
+	v := reflect.ValueOf(ptr).Elem() // the struct variable
+
+	for i := 0; i < v.NumField(); i++ {
+
+		fieldInfo := v.Type().Field(i) // a reflect.StructField
+		tag := fieldInfo.Tag           // a reflect.StructTag
+		name := tag.Get("json")
+
+		if name == "" {
+			name = strings.ToLower(fieldInfo.Name)
+		}
+		//去掉逗号后面内容 如 `json:"voucher_usage,omitempty"`
+		name = strings.Split(name, ",")[0]
+		LogDebug("JSONnAME:" + name)
+		if value, ok := fields[name]; ok {
+
+			LogDebug("fieldInfo.Name:" + fieldInfo.Name)
+			//给结构体赋值
+			//保证赋值时数据类型一致
+			LogDebug(fmt.Sprintf("类型1：%s,类型2：%s", reflect.ValueOf(value).Type(), v.FieldByName(fieldInfo.Name).Type()))
+			if reflect.ValueOf(value).Type() == v.FieldByName(fieldInfo.Name).Type() {
+				v.FieldByName(fieldInfo.Name).Set(reflect.ValueOf(value))
+			}
+
+		}
+	}
+
 	return
 }
